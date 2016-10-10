@@ -1,21 +1,21 @@
 package company.drink.com.drinkingsveeg;
 
-import android.provider.SyncStateContract;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import company.drink.com.drinkingsveeg.helpers.Constants;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends Activity implements View.OnClickListener {
 
     private ConstraintLayout activityRegister;
     private EditText name;
@@ -23,6 +23,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText password;
     private EditText retypePassword;
     private Button button;
+    private ProgressBar progressBar;
 
     private void findViews() {
         activityRegister = (ConstraintLayout)findViewById( R.id.activity_register );
@@ -31,6 +32,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         password = (EditText)findViewById( R.id.editText3 );
         retypePassword = (EditText)findViewById( R.id.editText4 );
         button = (Button)findViewById( R.id.button );
+        progressBar = (ProgressBar) findViewById( R.id.progressBar );
 
         button.setOnClickListener( this );
     }
@@ -46,16 +48,18 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             Constants.getInstance().POST("http://drinking.sveeg.com/api/register", params, new Constants.IGetInterface() {
                 @Override
                 public void onStart() {
-
+                    progressBar.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onFinish(String result) {
                     Log.i("result",result);
+                    progressBar.setVisibility(View.GONE);
                 }
             });
         }
     }
+    //null{"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjUsImlzcyI6Imh0dHA6XC9cL2RyaW5raW5nLnN2ZWVnLmNvbVwvYXBpXC9yZWdpc3RlciIsImlhdCI6MTQ3NjEzOTY4NCwiZXhwIjoxNDc2MTQzMjg0LCJuYmYiOjE0NzYxMzk2ODQsImp0aSI6IjZhNzIwYzM4NzFmZmEwNjc3MzEyMWZjZDA3NWY5ZDQyIn0.7xj-441xvMf4XkEvypAi-Ms1dGe2Gk5dXaedljibLOU"}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
