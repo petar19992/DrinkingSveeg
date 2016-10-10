@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -12,10 +11,14 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import company.drink.com.drinkingsveeg.helpers.Constants;
+import company.drink.com.drinkingsveeg.helpers.SharedPreferenceManager;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -57,8 +60,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                 @Override
                 public void onFinish(String result) {
-                    Log.i("result",result);
+                    try {
+                        JSONObject jsonObject=new JSONObject(result);
+                        String token= (String) jsonObject.get("token");
+                        SharedPreferenceManager.getInstance(getApplicationContext()).setString(SharedPreferenceManager.TOKEN,token);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     progressBar.setVisibility(View.GONE);
+                    Intent i=new Intent(MainActivity.this,MapsActivity.class);
+                    startActivity(i);
                 }
             });
         }

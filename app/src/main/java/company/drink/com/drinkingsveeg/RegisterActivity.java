@@ -3,17 +3,20 @@ package company.drink.com.drinkingsveeg;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import company.drink.com.drinkingsveeg.helpers.Constants;
+import company.drink.com.drinkingsveeg.helpers.SharedPreferenceManager;
 
 public class RegisterActivity extends Activity implements View.OnClickListener {
 
@@ -53,7 +56,13 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
 
                 @Override
                 public void onFinish(String result) {
-                    Log.i("result",result);
+                    try {
+                        JSONObject jsonObject=new JSONObject(result);
+                        String token= (String) jsonObject.get("token");
+                        SharedPreferenceManager.getInstance(getApplicationContext()).setString(SharedPreferenceManager.TOKEN,token);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     progressBar.setVisibility(View.GONE);
                 }
             });
